@@ -1,15 +1,16 @@
-import React from 'react';
-import './App.css';
+import React, { useState } from 'react';
+// import './App.css';
+import './styles/main.scss';
 
-import PrimeInput from './component/PrimeInput/PrimeInput';
-import AlgorithmPicker from './component/AlgorithmPicker/AlgorithmPicker';
+// import PrimeInput from './component/PrimeGenerater/PrimeGenerater';
+import PrimeGenerator from './component/PrimeGenerater/PrimeGenerator';
 
 function App() {
     return (
-        <div className='App'>
+        <div className='container'>
             <h1>Prime Generator</h1>
-            <PrimeInput />
-            <AlgorithmPicker />
+            {/* <PrimeInput /> */}
+            <PrimeGenerator />
         </div>
     );
 }

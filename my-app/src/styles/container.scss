@@ -1,0 +1,14 @@
+.container {
+    max-width: 100rem;
+    margin: 5rem auto;
+    display: flex;
+    flex-direction: column;
+    height: 87vh;
+    align-items: center;
+}
+
+.generator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

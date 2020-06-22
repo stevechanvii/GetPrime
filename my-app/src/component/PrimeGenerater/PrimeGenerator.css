@@ -1,0 +1,14 @@
+/* -- scale animation -- */
+@keyframes scale {
+    from {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+    }
+    to {
+        opacity: 1;
+        transform: scale3d(1, 1, 1);
+    }
+}
+.scale {
+    animation: scale both 0.4s cubic-bezier(0.4, 0, 0, 1.5);
+}

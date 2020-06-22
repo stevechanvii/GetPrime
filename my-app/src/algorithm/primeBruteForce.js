@@ -1,14 +1,13 @@
-import React from 'react';
-
-const Prime = () => {
+export const primeBruteForce = (primeCount) => {
+    if (primeCount == 0) {
+        return '';
+    }
     const primes = [];
     let n = primes.length;
     let flag = true;
 
-    // for (let i = 2; i <= n; i++) {
-
     let i = 2;
-    while (n < 3000) {
+    while (n < primeCount) {
         flag = true;
         for (let j = 2; j < i; j++) {
             if (i % j == 0) {
@@ -23,15 +22,5 @@ const Prime = () => {
         i++;
     }
 
-    console.log(primes);
-
-    return (
-        <div>
-            {primes.map((key, index) => (
-                <span key={index}>{key} </span>
-            ))}
-        </div>
-    );
+    return primes;
 };
-
-export default Prime;
