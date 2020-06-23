@@ -9,6 +9,7 @@ export const primeBruteForce = (primeCount) => {
         for (let j = 2; j < i; j++) {
             if (i % j === 0) {
                 flag = false;
+                break;
             }
         }
 

@@ -41,7 +41,7 @@ const PrimeGenerator = () => {
         const n = parseInt(primeCount);
         console.log(algorithm);
         if (n > 0 && Number.isInteger(n)) {
-            if (algorithm === 'Brute Force' && primeCount > 5000) {
+            if (algorithm === 'Brute Force' && primeCount > 10000) {
                 setModal({
                     name: 'Error',
                     desc: [
