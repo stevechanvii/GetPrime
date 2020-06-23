@@ -23,7 +23,7 @@ export const primeBruteForce = (primeCount) => {
 };
 
 export const primeEratosthenes = (primeCount) => {
-    console.log(primeCount);
+    // This demo can be found at http://jsfiddle.net/KARZw/
     // Eratosthenes algorithm to find all primes under n
     var array = [],
         upperLimit = Math.sqrt(primeCount),

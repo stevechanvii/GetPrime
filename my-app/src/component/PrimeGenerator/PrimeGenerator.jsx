@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import Loader from '../Loader/Loader';
 import Modal from '../Modal/Modal';
+import algorithmCheck from '../AlgorithmCheck/AlgorithmCheck';
 import { primeBruteForce, primeEratosthenes } from '../../algorithm/prime';
 
 const PrimeGenerator = () => {
@@ -19,6 +20,7 @@ const PrimeGenerator = () => {
     const [loading, setLoading] = useState(false);
     const [info, setInfo] = useState('');
     const [isVisible, setVisible] = useState(false);
+    const [modal, setModal] = useState({ name: 'Error', desc: ['Input must be an integer'] });
 
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
@@ -26,18 +28,40 @@ const PrimeGenerator = () => {
     /**
      * Radio button change handler
      */
-    // const onCheckerClick = () => {
-    //     console.log('Check');
-    // };
+    const onAlgorithmCheckClick = () => {
+        console.log('Check');
+        setModal({ name: algorithm, desc: algorithmCheck[algorithm] });
+        showModal();
+    };
 
     /**
      * Button Generate Prime click handler, set loading to provoke effect hook
      */
     const clickHandler = () => {
         const n = parseInt(primeCount);
+        console.log(algorithm);
         if (n > 0 && Number.isInteger(n)) {
-            setLoading(true);
+            if (algorithm === 'Brute Force' && primeCount > 5000) {
+                setModal({
+                    name: 'Error',
+                    desc: [
+                        'Brute Force will spend you minutes to calculate, try a smaller number or use Eratosthenes algorithm',
+                    ],
+                });
+                showModal();
+            } else if (algorithm === 'Sieve of Eratosthenes' && primeCount > 500000) {
+                setModal({
+                    name: 'Error',
+                    desc: [
+                        'Eratosthenes algorithm support numbers up to 500,000, plesase try a smaller number',
+                    ],
+                });
+                showModal();
+            } else {
+                setLoading(true);
+            }
         } else {
+            setModal({ name: 'Error', desc: ['Input must be a positive integer greater than 1'] });
             showModal();
         }
     };
@@ -80,7 +104,7 @@ const PrimeGenerator = () => {
                         value={primeCount}
                         onChange={(e) => setPrimeCount(e.target.value)}
                     ></input>
-                    {algorithm === 'Brute Force' ? ' Prime Numbers' : ''}
+                    {algorithm === 'Brute Force' ? ' prime numbers' : ''}
                 </div>
 
                 <div className='generator__form__group'>
@@ -117,8 +141,10 @@ const PrimeGenerator = () => {
                     </div>
                 </div>
 
-                <div>
-                    {/* <button onClick={onCheckerClick}>Check Algorithm</button> */}
+                <div className='generator__form-button-group'>
+                    <button className='generator__form-button' onClick={onAlgorithmCheckClick}>
+                        Check Algorithm
+                    </button>
                     <button className='generator__form-button' onClick={clickHandler}>
                         Generate Prime
                     </button>
@@ -145,9 +171,13 @@ const PrimeGenerator = () => {
                 )}
             </div>
             <Modal visible={isVisible} onClose={() => hideModal()} animation='zoom' width={560}>
-                <p className='modal__header'>Error!</p>
+                <p className='modal__header'>{modal.name}</p>
                 <div className='modal__content'>
-                    Input must be a positive integer greater than 1.
+                    <ul className='modal__content-ul'>
+                        {modal.desc.map((detail, index) => (
+                            <li key={index}>{detail}</li>
+                        ))}
+                    </ul>
                 </div>
             </Modal>
         </div>

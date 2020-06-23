@@ -7,9 +7,17 @@
     align-items: center;
 }
 
-.app-name {
-    font-size: 4rem;
-    font-weight: 400;
+.app {
+    &-name {
+        font-size: 5rem;
+        font-weight: 400;
+
+        font-size: 4rem;
+    }
+
+    &-img {
+        width: 50%;
+    }
 }
 
 .generator {
@@ -24,8 +32,12 @@
 
         &-subtitle {
             font-size: 2.5rem;
-            margin-top: 1rem;
+            margin-top: 2rem;
             animation: moveInRight 1s ease-out;
+
+            @media only screen and (max-width: $bp-small) {
+                font-size: 2rem;
+            }
         }
 
         &-input {
@@ -104,6 +116,12 @@
             opacity: 1;
         }
 
+        &-button-group {
+            display: flex;
+            justify-content: space-evenly;
+            width: 80%;
+        }
+
         &-button {
             padding: 1rem;
             background-color: white;
@@ -111,6 +129,7 @@
             border: none;
             outline: none;
             font-size: 1.5rem;
+            color: var(--color-grey-dark-1);
 
             &:hover {
                 box-shadow: 0.5rem 0.5rem 5rem rgba(#fff, 0.3);
@@ -161,9 +180,19 @@
 
     &__content {
         display: flex;
-        justify-content: center;
+        // justify-content: center;
         font-size: 2rem;
         color: var(--color-grey-dark-1);
-        margin-top: 0.5rem;
+        margin: 0.5rem;
+        margin-left: 2.2rem;
+
+        &-ul {
+            list-style-position: outside;
+            font-size: 1.5rem;
+
+            li {
+                margin-top: 0.6rem;
+            }
+        }
     }
 }
