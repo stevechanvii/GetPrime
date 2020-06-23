@@ -1,94 +1,155 @@
-import React, { useState } from 'react';
-// import { makeStyles } from '@material-ui/core/styles';
-// import TextField from '@material-ui/core/TextField';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
+import React, { useState, useEffect } from 'react';
 
-import Timer from '../Timer/Timer';
-import { primeBruteForce } from '../../algorithm/primeBruteForce';
-
-import './PrimeGenerator.css';
+import Loader from '../Loader/Loader';
+import Modal from '../Modal/Modal';
+import { primeBruteForce, primeEratosthenes } from '../../algorithm/prime';
 
 const PrimeGenerator = () => {
+    /**
+     * primeCount: the number of primes to be calculated
+     * algorithm: a string of selected algorithm
+     * primes: a list of prime numbers
+     * loading: boolean state to check weather the algorithm is running
+     * info: a short description of running status
+     * isVisible: a modal display
+     */
     const [primeCount, setPrimeCount] = useState(1000);
-    const [algorithm, setAlgorithm] = useState('bruteForce');
+    const [algorithm, setAlgorithm] = useState('Brute Force');
     const [primes, setPrimes] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [info, setInfo] = useState('');
+    const [isVisible, setVisible] = useState(false);
 
-    const onCheckerClick = (e) => {
-        e.preventDefault();
-        console.log('Check');
+    const showModal = () => setVisible(true);
+    const hideModal = () => setVisible(false);
+
+    /**
+     * Radio button change handler
+     */
+    // const onCheckerClick = () => {
+    //     console.log('Check');
+    // };
+
+    /**
+     * Button Generate Prime click handler, set loading to provoke effect hook
+     */
+    const clickHandler = () => {
+        const n = parseInt(primeCount);
+        if (n > 0 && Number.isInteger(n)) {
+            setLoading(true);
+        } else {
+            showModal();
+        }
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(1, loading);
-        setLoading(true);
-        console.log(2, loading);
-        const primes = primeBruteForce(primeCount);
-        console.log(3, loading);
-        setPrimes(primes);
-        console.log(4, loading);
+    /**
+     * Calculate prime numbers after the page first render or loading state change
+     */
+    useEffect(() => {
+        const start = new Date().getTime();
+        if (algorithm === 'Brute Force') {
+            setPrimes(primeBruteForce(primeCount));
+        } else {
+            setPrimes(primeEratosthenes(primeCount));
+        }
+        const end = new Date().getTime();
+        const time = end - start;
+
+        setInfo(
+            `We spend ${time}ms to find the ${
+                algorithm === `Brute Force`
+                    ? `first ${primeCount} primes`
+                    : `primes between 0 to ${primeCount}`
+            } by ${algorithm} algorithm.`
+        );
         setLoading(false);
-        console.log(5, loading);
-    };
+    }, [loading]);
 
     return (
         <div className='generator'>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    Get The First{' '}
+            <div className='generator__form'>
+                <div className='generator__form-subtitle'>
+                    {algorithm === 'Brute Force'
+                        ? 'Find the first '
+                        : 'Find prime numbers from 0 to '}
                     <input
-                        type='text'
+                        type='number'
                         name='prime'
+                        autoComplete='off'
+                        className='generator__form-input'
                         value={primeCount}
                         onChange={(e) => setPrimeCount(e.target.value)}
-                    ></input>{' '}
-                    Prime Numbers
+                    ></input>
+                    {algorithm === 'Brute Force' ? ' Prime Numbers' : ''}
                 </div>
 
-                <FormControl component='fieldset'>
-                    <RadioGroup
-                        row
-                        aria-label='algorithm'
-                        name='algorithm'
-                        value={algorithm}
-                        onChange={(e) => setAlgorithm(e.target.value)}
-                    >
-                        <FormControlLabel
-                            value='bruteForce'
-                            control={<Radio />}
-                            label='Brute Force'
+                <div className='generator__form__group'>
+                    <div className='generator__form__radio-group'>
+                        <input
+                            type='radio'
+                            id='small'
+                            className='generator__form__radio-input'
+                            name='algorithm'
+                            value='Brute Force'
+                            checked={algorithm === 'Brute Force'}
+                            onChange={(e) => setAlgorithm(e.target.value)}
                         />
-                        <FormControlLabel
-                            value='eratosthenes'
-                            control={<Radio />}
-                            label='Sieve of Eratosthenes'
+                        <label htmlFor='small' className='generator__form__radio-label'>
+                            <span className='generator__form__radio-button'></span>
+                            Brute Force
+                        </label>
+                    </div>
+
+                    <div className='generator__form__radio-group'>
+                        <input
+                            type='radio'
+                            id='large'
+                            className='generator__form__radio-input'
+                            name='algorithm'
+                            value='Sieve of Eratosthenes'
+                            checked={algorithm === 'Sieve of Eratosthenes'}
+                            onChange={(e) => setAlgorithm(e.target.value)}
                         />
-                    </RadioGroup>
-                </FormControl>
-                <div>
-                    <button onClick={onCheckerClick}>Check Algorithm</button>
-                    <input type='submit' value='Generate Prime' />
+                        <label htmlFor='large' className='generator__form__radio-label'>
+                            <span className='generator__form__radio-button'></span>
+                            Eratosthenes
+                        </label>
+                    </div>
                 </div>
-            </form>
+
+                <div>
+                    {/* <button onClick={onCheckerClick}>Check Algorithm</button> */}
+                    <button className='generator__form-button' onClick={clickHandler}>
+                        Generate Prime
+                    </button>
+                </div>
+            </div>
             <div>
                 {loading ? (
-                    <Timer />
+                    <Loader />
                 ) : (
-                    primes.map((prime, index) => (
-                        <span
-                            key={index}
-                            className='scale'
-                            style={{ animationDelay: `${index * 50}ms` }}
-                        >
-                            {prime}{' '}
-                        </span>
-                    ))
+                    <div className='prime'>
+                        <div className='prime__info'>{info}</div>
+                        <div className='prime__list'>
+                            {primes.map((prime, index) => (
+                                <span
+                                    key={index}
+                                    className='prime__number-scale prime__number'
+                                    style={{ animationDelay: `${index * 50}ms` }}
+                                >
+                                    {prime}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
                 )}
             </div>
+            <Modal visible={isVisible} onClose={() => hideModal()} animation='zoom' width={560}>
+                <p className='modal__header'>Error!</p>
+                <div className='modal__content'>
+                    Input must be a positive integer greater than 1.
+                </div>
+            </Modal>
         </div>
     );
 };
